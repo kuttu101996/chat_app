@@ -1,0 +1,7 @@
+/* #25d366 */
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  background-color: #e6ffda;
+}
