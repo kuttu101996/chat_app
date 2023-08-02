@@ -6,6 +6,7 @@ const { connection } = require("./config/db");
 const colors = require("colors");
 const { userRouter } = require("./Routes/user.router");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
+const { chatRouter } = require("./Routes/chat.router");
 
 const app = express();
 app.use(cors());
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/user", userRouter);
+app.use("/api/chat", chatRouter);
 
 app.use(notFound);
 app.use(errorHandler);
