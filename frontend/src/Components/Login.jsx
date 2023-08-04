@@ -7,18 +7,19 @@ import {
   InputGroup,
   InputRightElement,
   VStack,
-  useStatStyles,
   useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [show, setShow] = useState(false);
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -56,11 +57,12 @@ const Login = () => {
 
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
+      navigate("/chat");
       return;
     } catch (error) {
       toast({
         title: "Error Occured",
-        description: error.response.data.message,
+        description: error.message,
         status: "error",
         duration: 3000,
         isClosable: true,

@@ -6,7 +6,6 @@ import {
   InputGroup,
   InputRightElement,
   VStack,
-  useStatStyles,
   useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
@@ -16,11 +15,11 @@ import axios from "axios";
 const Signup = () => {
   const [show, setShow] = useState(false);
   const [showCnf, setShowCnf] = useState(false);
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [confirmpassword, setConfirmpassword] = useState();
-  const [pic, setPic] = useState();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmpassword, setConfirmpassword] = useState("");
+  const [pic, setPic] = useState("");
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   // const history = useHistory();
@@ -50,7 +49,7 @@ const Signup = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          setPic(data.url.toString());
+          setPic(data.url.toString(""));
           setLoading(false);
         })
         .catch((err) => {
