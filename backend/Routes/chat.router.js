@@ -7,6 +7,7 @@ const {
   renameGroup,
   addToGroup,
   leaveGroup,
+  removeFromGroup,
 } = require("../controllers/chatController");
 
 const chatRouter = express.Router();
@@ -19,9 +20,7 @@ chatRouter
 chatRouter.route("/group").post(authentication, createGroupChat);
 
 chatRouter.route("/rename").put(authentication, renameGroup);
-
 chatRouter.route("/addtogroup").put(authentication, addToGroup);
-
-chatRouter.route("/removeGroup").put(authentication, leaveGroup);
+chatRouter.route("/removefromgroup").put(authentication, removeFromGroup);
 
 module.exports = { chatRouter };

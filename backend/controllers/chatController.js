@@ -124,10 +124,42 @@ const renameGroup = asyncHandler(async function (req, res) {
 });
 
 const addToGroup = asyncHandler(async function (req, res) {
-    
+  const { chatId, userId } = req.body;
+
+  const added = await Chat.findByIdAndUpdate(
+    chatId,
+    { $push: { users: userId } },
+    { new: true }
+  )
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password");
+
+  if (added) {
+    return res.json(added);
+  } else {
+    res.status(400);
+    throw new Error("Something went wrong");
+  }
 });
 
-const leaveGroup = asyncHandler(async function (req, res) {});
+const removeFromGroup = asyncHandler(async function (req, res) {
+  const { chatId, userId } = req.body;
+
+  const remove = await Chat.findByIdAndUpdate(
+    chatId,
+    { $pull: { users: userId } },
+    { new: true }
+  )
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password");
+
+  if (remove) {
+    return res.json(remove);
+  } else {
+    res.status(400);
+    throw new Error("Something went wrong");
+  }
+});
 
 module.exports = {
   accessChat,
@@ -135,5 +167,5 @@ module.exports = {
   createGroupChat,
   renameGroup,
   addToGroup,
-  leaveGroup,
+  removeFromGroup,
 };

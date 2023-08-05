@@ -2,6 +2,12 @@ import {
   Avatar,
   Box,
   Button,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Input,
   Menu,
   MenuButton,
   MenuDivider,
@@ -9,11 +15,17 @@ import {
   MenuList,
   Text,
   Tooltip,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { ChatState } from "../../context/ChatProvider";
 import ProfileModal from "./ProfileModal";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import ChatLoading from "../ChatLoading";
+import UserListItem from "../userAvatar/UserListItem";
 
 const SideComing = () => {
   const [search, setSearch] = useState("");
@@ -21,6 +33,54 @@ const SideComing = () => {
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState();
   const { user } = ChatState();
+  const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+
+  const logoutHandler = () => {
+    localStorage.removeItem("userInfo");
+    navigate("/");
+  };
+
+  const handleSearch = async () => {
+    if (!search) {
+      toast({
+        title: "Write something to search",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top-left",
+      });
+    }
+
+    try {
+      setLoading(true);
+      const token = JSON.parse(localStorage.getItem("userInfo"));
+
+      const config = {
+        headers: {
+          Authorization: `bearer ${token.token}`,
+        },
+      };
+
+      const { data } = await axios.get(`/api/user?search=${search}`, config);
+      setLoading(false);
+      setSearchResult(data);
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description: "Failed to load search result",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom-left",
+      });
+    }
+  };
+
+  const accessChat = (id) => {
+    
+  };
 
   return (
     <>
@@ -35,7 +95,7 @@ const SideComing = () => {
         borderColor={"lightgrey"}
       >
         <Tooltip label="Search User for Chat" hasArrow placement="bottom-end">
-          <Button variant="ghost">
+          <Button variant="ghost" onClick={onOpen}>
             <i className="fa-solid fa-magnifying-glass"></i>
             <Text display={{ base: "none", md: "flex" }} px="10px">
               Search User
@@ -68,11 +128,47 @@ const SideComing = () => {
                 <MenuItem>My Profile</MenuItem>
               </ProfileModal>
               <MenuDivider />
-              <MenuItem>Logout</MenuItem>
+              <MenuItem onClick={logoutHandler}>Logout</MenuItem>
             </MenuList>
           </Menu>
         </div>
       </Box>
+      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottomWidth={"5px"}>Search User</DrawerHeader>
+          <DrawerBody>
+            <Box display={"flex"} pb={2}>
+              <Input
+                placeholder="Search by Name or Email"
+                mr={2}
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                }}
+              />
+              <Button onClick={handleSearch}>Go</Button>
+            </Box>
+            {loading ? (
+              <ChatLoading />
+            ) : (
+              <>
+                {/* {console.log(searchResult)} */}
+
+                {searchResult.map((item) => {
+                  return (
+                    <UserListItem
+                      key={item._id}
+                      user={item}
+                      handlFunction={() => accessChat(item._id)}
+                    />
+                  );
+                })}
+              </>
+            )}
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 };
