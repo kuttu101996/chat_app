@@ -18,6 +18,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/spinner";
 import React, { useState } from "react";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { ChatState } from "../../context/ChatProvider";
@@ -31,8 +32,8 @@ const SideComing = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingChat, setLoadingChat] = useState();
-  const { user } = ChatState();
+  const [loadingChat, setLoadingChat] = useState(false);
+  const { user, setSelectedChat, chats, setChats } = ChatState();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -51,18 +52,17 @@ const SideComing = () => {
         isClosable: true,
         position: "top-left",
       });
+      return;
     }
 
     try {
       setLoading(true);
-      const token = JSON.parse(localStorage.getItem("userInfo"));
-
+      const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
       const config = {
         headers: {
-          Authorization: `bearer ${token.token}`,
+          Authorization: `bearer ${token}`,
         },
       };
-
       const { data } = await axios.get(`/api/user?search=${search}`, config);
       setLoading(false);
       setSearchResult(data);
@@ -78,8 +78,33 @@ const SideComing = () => {
     }
   };
 
-  const accessChat = (id) => {
-    
+  const accessChat = async (userId) => {
+    try {
+      setLoadingChat(true);
+
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `bearer ${user.token}`,
+        },
+      };
+      const { data } = await axios.post(`/api/chat`, { userId }, config);
+
+      if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
+
+      setSelectedChat(data);
+      setLoadingChat(false);
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Error fetching the chat",
+        description: error.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom-left",
+      });
+    }
   };
 
   return (
@@ -153,19 +178,18 @@ const SideComing = () => {
               <ChatLoading />
             ) : (
               <>
-                {/* {console.log(searchResult)} */}
-
                 {searchResult.map((item) => {
                   return (
                     <UserListItem
                       key={item._id}
                       user={item}
-                      handlFunction={() => accessChat(item._id)}
+                      handleFunction={() => accessChat(item._id)}
                     />
                   );
                 })}
               </>
             )}
+            {loadingChat && <Spinner display={"flex"} ml={"auto"} />}
           </DrawerBody>
         </DrawerContent>
       </Drawer>
