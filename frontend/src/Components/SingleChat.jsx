@@ -42,7 +42,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           config
         );
         setNewMessage("");
-        setMessages([...messages, data]);
+        fetchMessages();
+        // setMessages([...messages, data]);
       } catch (error) {
         toast({
           title: "Error Occured!",
