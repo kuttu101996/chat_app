@@ -149,7 +149,7 @@ const SideComing = () => {
               />
             </MenuButton>
             <MenuList>
-              <ProfileModal user={user}>
+              <ProfileModal user={user.userExist}>
                 <MenuItem>My Profile</MenuItem>
               </ProfileModal>
               <MenuDivider />
