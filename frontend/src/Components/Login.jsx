@@ -12,6 +12,7 @@ import {
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ChatState } from "../context/ChatProvider";
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -20,6 +21,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
+  const { user, setUser } = ChatState();
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -54,10 +56,12 @@ const Login = () => {
         isClosable: true,
         position: "top",
       });
-
+      setUser(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
-      navigate("/chat");
+      setTimeout(() => {
+        navigate("/chat");
+      }, 2000);
       return;
     } catch (error) {
       toast({

@@ -26,7 +26,7 @@ const sendMessage = asyncHandler(async (req, res) => {
       select: "name pic email",
     });
 
-    await Chat.findByIdAndUpdate(chatId, {
+    await Chat.findByIdAndUpdate(req.body.chatId, {
       latestMessage: message,
     });
 
@@ -43,7 +43,7 @@ const allMessages = asyncHandler(async (req, res) => {
       .populate("sender", "name pic email")
       .populate("chat");
 
-    res.json(message);
+    return res.json(message);
   } catch (error) {
     res.status(400);
     throw new Error(error.message);

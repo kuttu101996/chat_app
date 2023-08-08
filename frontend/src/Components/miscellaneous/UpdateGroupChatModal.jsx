@@ -22,7 +22,7 @@ import UserBadgeItem from "../userAvatar/UserBadgeItem";
 import axios from "axios";
 import UserListItem from "../userAvatar/UserListItem";
 
-const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
+const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [groupChatName, setGroupChatName] = useState("");
@@ -32,16 +32,53 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
   const [renameLoading, setRenameLoading] = useState(false);
   const toast = useToast();
 
-  const handleRemove = async(userToRemove) => {
-    if (selectedChat.users.find((ele) => ele._id !== userToRemove._id)) {
+  const handleRemove = async (userToRemove) => {
+    if (
+      selectedChat.groupAdmin._id !== user.userExist._id &&
+      userToRemove._id !== user.userExist._id
+    ) {
       toast({
-        title: "User Already in the Group",
+        title: "Only admin can add or remove",
         status: "error",
         duration: 3000,
         isClosable: true,
         position: "bottom",
       });
       return;
+    }
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          Authorization: `bearer ${user.token}`,
+        },
+      };
+      const { data } = await axios.put(
+        `/api/chat/removefromgroup`,
+        {
+          chatId: selectedChat._id,
+          userId: userToRemove._id,
+        },
+        config
+      );
+      if (userToRemove._id === user.userExist._id) {
+        setSelectedChat();
+      } else setSelectedChat(data);
+
+      onClose();
+      setFetchAgain(!fetchAgain);
+      fetchMessages();
+      setLoading(false);
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        status: "error",
+        description: error.response.data.message,
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
     }
   };
 
@@ -56,7 +93,6 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
       });
       return;
     }
-    // console.log(selectedChat.groupAdmin._id == user.userExist._id);
     if (selectedChat.groupAdmin._id != user.userExist._id) {
       toast({
         title: "Only admins can add new user!",
@@ -232,7 +268,10 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="red" onClick={() => handleRemove(user)}>
+            <Button
+              colorScheme="red"
+              onClick={() => handleRemove(user.userExist)}
+            >
               Leave Group
             </Button>
           </ModalFooter>
