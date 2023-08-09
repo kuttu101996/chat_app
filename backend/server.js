@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
 const colors = require("colors");
+const path = require("path")
 
 const { chats } = require("./data/data");
 const { connection } = require("./config/db");
@@ -21,6 +22,20 @@ app.get("/", (req, res) => {
 app.use("/api/user", userRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/message", messageRouter);
+
+const __dirname1 = path.resolve()
+if (process.env.NODE_ENV == 'production') {
+  app.use(express.static(path.join(__dirname1, '/frontend/build')))
+
+  app.get('*', (req, res)=> {
+    res.sendFile()
+  })
+}
+else {
+  app.get("/", (req, res) => {
+    res.send({ msg: "Hello from Server" });
+  });
+}
 
 app.use(notFound);
 app.use(errorHandler);

@@ -15,6 +15,7 @@ import {
   MenuList,
   Text,
   Tooltip,
+  background,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -33,7 +34,14 @@ const SideComing = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
-  const { user, setSelectedChat, chats, setChats } = ChatState();
+  const {
+    user,
+    setSelectedChat,
+    chats,
+    setChats,
+    notification,
+    setNotification,
+  } = ChatState();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -133,11 +141,47 @@ const SideComing = () => {
         <div>
           <Menu>
             <MenuButton p={"10px"}>
+              {notification.length > 0 && (
+                <h3
+                  style={{
+                    width: "70%",
+                    background: "red",
+                    color: "white",
+                    borderRadius: "50%",
+                    marginBottom: -10,
+                    marginTop: -5,
+                    marginLeft: "10px",
+                  }}
+                >
+                  {notification.length}
+                </h3>
+              )}
               <BellIcon fontSize={"2xl"} m={1} />
             </MenuButton>
-            {/* <MenuList>
-              <MenuItem></MenuItem>
-            </MenuList> */}
+            <MenuList p={1}>
+              {!notification.length && "No new Messages"}
+              {notification.map((ele) => {
+                return (
+                  <MenuItem
+                    key={ele._id}
+                    mb={notification.length > 1 ? 1 : 0}
+                    _hover={{ backgroundColor: "#E8E8E8" }}
+                    onClick={() => {
+                      setSelectedChat(ele.chat);
+                      setNotification(
+                        notification.filter(
+                          (perticularNoti) => perticularNoti != ele
+                        )
+                      );
+                    }}
+                  >
+                    {ele.chat.isGroupChat
+                      ? `New message in ${ele.chat.chatName}`
+                      : `Message from ${ele.sender.name}`}
+                  </MenuItem>
+                );
+              })}
+            </MenuList>
           </Menu>
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>

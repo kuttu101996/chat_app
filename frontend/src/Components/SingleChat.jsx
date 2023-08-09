@@ -28,7 +28,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const [socketConnected, setSocketConnected] = useState(false);
-  const { user, selectedChat, setSelectedChat } = ChatState();
+  const { user, selectedChat, setSelectedChat, notification, setNotification } =
+    ChatState();
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const toast = useToast();
@@ -109,13 +110,20 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("stopTyping", () => setIsTyping(false));
   }, []);
 
+  // console.log(notification + "-----------------------");
+
   useEffect(() => {
     socket.on("messageRcv", (newMessageRcv) => {
       if (
         !selectedChatCompare ||
         selectedChatCompare._id != newMessageRcv.chat._id
       ) {
+        // setNotification([newMessageRcv, ...notification]);
         // Notification
+        if (!notification.includes(newMessageRcv)) {
+          setNotification([newMessageRcv, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
       } else {
         setMessages([...messages, newMessageRcv]);
       }
