@@ -2,7 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
 const colors = require("colors");
-const path = require("path")
+const path = require("path");
 
 const { chats } = require("./data/data");
 const { connection } = require("./config/db");
@@ -23,15 +23,14 @@ app.use("/api/user", userRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/message", messageRouter);
 
-const __dirname1 = path.resolve()
-if (process.env.NODE_ENV == 'production') {
-  app.use(express.static(path.join(__dirname1, '/frontend/build')))
+const __dirname1 = path.resolve();
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname1, "/frontend/build")));
 
-  app.get('*', (req, res)=> {
-    res.sendFile()
-  })
-}
-else {
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname1, "frontend", "build", "index.html"));
+  });
+} else {
   app.get("/", (req, res) => {
     res.send({ msg: "Hello from Server" });
   });
@@ -92,8 +91,8 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.off('setup', ()=> {
-    console.log('User Disconnected');
-    socket.leave(userData._id)
-  })
+  socket.off("setup", () => {
+    console.log("User Disconnected");
+    socket.leave(userData._id);
+  });
 });
