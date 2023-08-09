@@ -20,7 +20,6 @@ const MyChats = ({ fetchAgain }) => {
         },
       };
       const { data } = await axios.get("/api/chat", config);
-      // console.log(data);
       setChats(data);
     } catch (error) {
       toast({
@@ -82,7 +81,7 @@ const MyChats = ({ fetchAgain }) => {
         overflowY={"hidden"}
         bg={"#F8F8F8"}
       >
-        {chats ? (
+        {chats.length > 0 ? (
           <Stack overflowY={"scroll"}>
             {chats.map((chat) => {
               return (
@@ -101,6 +100,19 @@ const MyChats = ({ fetchAgain }) => {
                       ? getSender(loggedUser, chat.users)
                       : chat.chatName}
                   </Text>
+                  {chat.latestMessage && (
+                    <Text fontSize="xs">
+                      <b>
+                        {chat.latestMessage.sender.name === user.userExist.name
+                          ? "You"
+                          : chat.latestMessage.sender.name}{" "}
+                        :{" "}
+                      </b>
+                      {chat.latestMessage.content.length > 50
+                        ? chat.latestMessage.content.substring(0, 51) + "..."
+                        : chat.latestMessage.content}
+                    </Text>
+                  )}
                 </Box>
               );
             })}

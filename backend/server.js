@@ -4,7 +4,6 @@ const cors = require("cors");
 const colors = require("colors");
 const path = require("path");
 
-const { chats } = require("./data/data");
 const { connection } = require("./config/db");
 const { userRouter } = require("./Routes/user.router");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
@@ -15,9 +14,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send({ msg: "Hello from Server" });
-});
+// app.get("/", (req, res) => {
+//   res.send({ msg: "Hello from Server" });
+// });
 
 app.use("/api/user", userRouter);
 app.use("/api/chat", chatRouter);
@@ -39,13 +38,6 @@ if (process.env.NODE_ENV === "production") {
 app.use(notFound);
 app.use(errorHandler);
 
-app.get("/chats/:id", (req, res) => {
-  const data = chats.filter((ele) => {
-    return req.params.id === ele._id;
-  });
-  res.send({ msg: "Single Chat", data: data });
-});
-
 const server = app.listen(process.env.port, async () => {
   try {
     await connection;
@@ -64,8 +56,6 @@ const io = require("socket.io")(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("connected");
-
   socket.on("setup", (userData) => {
     socket.join(userData?._id);
     socket.emit("connected");
@@ -73,7 +63,6 @@ io.on("connection", (socket) => {
 
   socket.on("joinChat", (room) => {
     socket.join(room);
-    console.log(`User Joined room : ${room}`);
   });
 
   socket.on("typing", (room) => socket.in(room).emit("typing"));
@@ -82,7 +71,7 @@ io.on("connection", (socket) => {
   socket.on("newMessage", (newMessage) => {
     var chat = newMessage.chat;
 
-    if (!chat.users) return console.log("Not User");
+    if (!chat.users) return console.log("No User");
 
     chat.users.forEach((element) => {
       if (element._id == newMessage.sender._id) return;
