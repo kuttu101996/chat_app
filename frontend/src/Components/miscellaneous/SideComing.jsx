@@ -128,7 +128,7 @@ const SideComing = () => {
           </Button>
         </Tooltip>
         <Text fontSize={"2xl"} fontWeight={"bold"}>
-          Hok Kolorob
+          Hok Kolorob (HoKKo)
         </Text>
         <div>
           <Menu>

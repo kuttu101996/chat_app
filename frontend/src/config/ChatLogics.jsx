@@ -27,16 +27,17 @@ export const isSameSenderMargin = (messages, currMsg, index, loggedUserId) => {
   if (
     index < messages.length - 1 &&
     messages[index + 1].sender._id === currMsg.sender._id &&
-    currMsg.sender._id === loggedUserId
+    currMsg.sender._id !== loggedUserId
   )
-    return 33;
+    return "33px";
   else if (
     (index < messages.length - 1 &&
       messages[index + 1].sender._id !== currMsg.sender._id &&
       messages[index].sender._id !== loggedUserId) ||
-    (index === messages.length - 1 && messages[index].sender._id !== loggedUserId)
+    (index === messages.length - 1 &&
+      messages[index].sender._id !== loggedUserId)
   )
-    return 0;
+    return "0px";
   else return "auto";
 };
 

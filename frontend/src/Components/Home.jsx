@@ -22,7 +22,7 @@ const Home = () => {
 
     if (token) {
       navigate("/chat");
-    }
+    } else navigate("/");
   }, [navigate]);
 
   return (
@@ -37,7 +37,7 @@ const Home = () => {
         borderRadius="lg"
         borderWidth="1px"
       >
-        <Text fontSize="3xl">Hok Kolorob</Text>
+        <Text fontSize="3xl">Hok Kolorob (HoKKo)</Text>
       </Box>
       <Box bg={"white"} w="100%" p={4} borderRadius="lg" borderWidth="1px">
         <Tabs variant="soft-rounded" colorScheme="green">
