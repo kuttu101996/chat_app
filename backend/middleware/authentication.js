@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const asyncHandler = require("express-async-handler");
 const { User } = require("../Models/user.model");
@@ -12,7 +13,7 @@ const authentication = asyncHandler(async function (req, res, next) {
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
-      const decoded = jwt.verify(token, "shhh");
+      const decoded = jwt.verify(token, process.env.secret_key);
 
       req.user = await User.findById(decoded.id).select("-password"); // get details without the password
       next();

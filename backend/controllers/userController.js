@@ -51,7 +51,7 @@ const loginUser = asyncHandler(async (req, res) => {
   if (userExist && (await userExist.matchPass(password))) {
     userExist.password = "";
     res.status(201).json({
-      msg: "Successfully Registered",
+      msg: "Login Successful",
       userExist,
       token: generateToken(userExist._id),
     });
