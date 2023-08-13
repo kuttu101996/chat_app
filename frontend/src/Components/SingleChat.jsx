@@ -99,6 +99,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   useEffect(() => {
     fetchMessages();
+    if (selectedChat) {
+      // console.log(selectedChat._id);
+      setNotification(
+        notification.filter((ele) => {
+          return ele.chat._id !== selectedChat._id;
+        })
+      );
+    }
+    // console.log(notification);
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
@@ -110,15 +119,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("stopTyping", () => setIsTyping(false));
   }, []);
 
-  // console.log(notification + "-----------------------");
-
   useEffect(() => {
     socket.on("messageRcv", (newMessageRcv) => {
       if (
         !selectedChatCompare ||
         selectedChatCompare._id != newMessageRcv.chat._id
       ) {
-        // setNotification([newMessageRcv, ...notification]);
         // Notification
         if (!notification.includes(newMessageRcv)) {
           setNotification([newMessageRcv, ...notification]);
@@ -234,6 +240,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 onChange={typingHandler}
                 value={newMessage}
                 _hover={{ bg: "#E0E0E0" }}
+                color={"rgb(80, 80, 80)"}
               />
             </FormControl>
           </Box>

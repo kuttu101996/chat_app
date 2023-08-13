@@ -24,7 +24,7 @@ import UserListItem from "../userAvatar/UserListItem";
 
 const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
   const [loading, setLoading] = useState(false);
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
   const [groupChatName, setGroupChatName] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const { selectedChat, setSelectedChat, user } = ChatState();
@@ -93,7 +93,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
       });
       return;
     }
-    if (selectedChat.groupAdmin._id != user.userExist._id) {
+    if (selectedChat.groupAdmin._id !== user.userExist._id) {
       toast({
         title: "Only admins can add new user!",
         status: "error",
@@ -171,7 +171,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
   };
 
   const handleSearch = async (query) => {
-    setSearch(query);
+    // setSearch(query);
     if (!query) {
       return;
     }

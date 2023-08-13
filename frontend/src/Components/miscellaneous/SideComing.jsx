@@ -15,7 +15,6 @@ import {
   MenuList,
   Text,
   Tooltip,
-  background,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -136,7 +135,7 @@ const SideComing = () => {
           </Button>
         </Tooltip>
         <Text fontSize={"2xl"} fontWeight={"bold"}>
-          Hok Kolorob (HoKKo)
+          Let's Chat
         </Text>
         <div>
           <Menu>
@@ -158,19 +157,20 @@ const SideComing = () => {
               )}
               <BellIcon fontSize={"2xl"} m={1} />
             </MenuButton>
-            <MenuList p={1}>
+            <MenuList p={2}>
               {!notification.length && "No new Messages"}
               {notification.map((ele) => {
                 return (
                   <MenuItem
                     key={ele._id}
+                    p={1}
                     mb={notification.length > 1 ? 1 : 0}
                     _hover={{ backgroundColor: "#E8E8E8" }}
                     onClick={() => {
                       setSelectedChat(ele.chat);
                       setNotification(
                         notification.filter(
-                          (perticularNoti) => perticularNoti != ele
+                          (perticularNoti) => perticularNoti !== ele
                         )
                       );
                     }}
@@ -184,7 +184,7 @@ const SideComing = () => {
             </MenuList>
           </Menu>
           <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+            <MenuButton padding={2} as={Button} rightIcon={<ChevronDownIcon />}>
               <Avatar
                 size={"sm"}
                 cursor={"pointer"}
@@ -192,7 +192,7 @@ const SideComing = () => {
                 src={user.userExist.pic}
               />
             </MenuButton>
-            <MenuList>
+            <MenuList color={"grey"}>
               <ProfileModal user={user.userExist}>
                 <MenuItem>My Profile</MenuItem>
               </ProfileModal>

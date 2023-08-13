@@ -41,7 +41,7 @@ const ScrollableChat = ({ messages }) => {
                     ele.sender._id === loggedUserId ? "#BEE3F8" : "#B9F5D0"
                   }`,
                   borderRadius: "10px",
-                  padding: "5px 15px",
+                  padding: "3px 15px",
                   maxWidth: "75%",
                   marginLeft: isSameSenderMargin(
                     messages,
