@@ -4,11 +4,11 @@ const cors = require("cors");
 const colors = require("colors");
 const path = require("path");
 
-const { connection } = require("./config/db");
-const { userRouter } = require("./Routes/user.router");
-const { notFound, errorHandler } = require("./middleware/errorHandler");
-const { chatRouter } = require("./Routes/chat.router");
-const { messageRouter } = require("./Routes/message.router");
+const { connection } = require("./backend/config/db");
+const { userRouter } = require("./backend/Routes/user.router");
+const { notFound, errorHandler } = require("./backend/middleware/errorHandler");
+const { chatRouter } = require("./backend/Routes/chat.router");
+const { messageRouter } = require("./backend/Routes/message.router");
 
 const app = express();
 app.use(cors());
