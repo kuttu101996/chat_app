@@ -14,10 +14,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// app.get("/", (req, res) => {
-//   res.send({ msg: "Hello from Server" });
-// });
-
 app.use("/api/user", userRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/message", messageRouter);
@@ -31,7 +27,7 @@ if (process.env.NODE_ENV === "production") {
   });
 } else {
   app.get("/", (req, res) => {
-    res.send({ msg: "Hello from Server" });
+    res.send({ msg: "Hello from the Server" });
   });
 }
 

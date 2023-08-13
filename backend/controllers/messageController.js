@@ -33,7 +33,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     return res.json(message);
   } catch (error) {
     res.status(400);
-    throw new Error(error.message);
+    throw new Error(error);
   }
 });
 
@@ -46,7 +46,7 @@ const allMessages = asyncHandler(async (req, res) => {
     return res.json(message);
   } catch (error) {
     res.status(400);
-    throw new Error(error.message);
+    throw new Error(error);
   }
 });
 

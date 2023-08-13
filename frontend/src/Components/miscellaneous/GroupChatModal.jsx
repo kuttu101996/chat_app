@@ -27,6 +27,7 @@ const GroupChatModal = ({ children }) => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [imageLink, setImageLink] = useState("");
   const toast = useToast();
   const { user, chats, setChats } = ChatState();
 
@@ -75,6 +76,51 @@ const GroupChatModal = ({ children }) => {
     setSelectedUsers(selectedUsers.filter((ele) => ele._id !== user._id));
   };
 
+  const postDetails = (pics) => {
+    setLoading(true);
+    if (pics === undefined) {
+      toast({
+        title: "Please Select a valid image!",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
+
+    if (pics.type === "image/jpeg" || pics.type === "image/png") {
+      const data = new FormData();
+      data.append("file", pics);
+      data.append("upload_preset", "first_chat_app");
+      data.append("cloud_name", "dlz45puq4");
+
+      fetch(`https://api.cloudinary.com/v1_1/dlz45puq4/image/upload`, {
+        method: "POST",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setImageLink(data.url.toString(""));
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+    } else {
+      toast({
+        title: "Please Select a valid image!",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+  };
+
   const handleSubmit = async () => {
     if (!groupChatName || !selectedUsers) {
       toast({
@@ -97,6 +143,7 @@ const GroupChatModal = ({ children }) => {
         {
           name: groupChatName,
           users: JSON.stringify(selectedUsers.map((ele) => ele._id)),
+          chatPic: imageLink,
         },
         config
       );
@@ -146,6 +193,18 @@ const GroupChatModal = ({ children }) => {
                 placeholder="Chat Name"
                 mb={3}
                 onChange={(e) => setGroupChatName(e.target.value)}
+              />
+            </FormControl>
+            <FormControl>
+              <Input
+                type="file"
+                p={1.5}
+                mb={3}
+                accept="image/*"
+                placeholder="Upload a Profile Picture"
+                onChange={(e) => {
+                  postDetails(e.target.files[0]);
+                }}
               />
             </FormControl>
             <FormControl>

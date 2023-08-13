@@ -44,7 +44,7 @@ const accessChat = asyncHandler(async function (req, res) {
       res.status(200).send(fullChat);
     } catch (error) {
       res.status(400);
-      throw new Error(error.message);
+      throw new Error(error);
     }
   }
 });
@@ -67,7 +67,7 @@ const fetchChats = asyncHandler(async function (req, res) {
       });
   } catch (error) {
     res.status(400);
-    throw new Error(error.message);
+    throw new Error(error);
   }
 });
 
@@ -91,6 +91,10 @@ const createGroupChat = asyncHandler(async function (req, res) {
       users: users,
       isGroupChat: true,
       groupAdmin: req.user,
+      chatPic:
+        req.body.pic !== ""
+          ? req.body.pic
+          : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
     });
 
     const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
@@ -100,7 +104,7 @@ const createGroupChat = asyncHandler(async function (req, res) {
     return res.status(200).json(fullGroupChat);
   } catch (error) {
     res.status(400);
-    throw new Error(error.message);
+    throw new Error(error);
   }
 });
 

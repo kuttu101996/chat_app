@@ -7,6 +7,11 @@ const chatSchema = mongoose.Schema(
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     latestMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
     groupAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    chatPic: {
+      type: String,
+      // default:
+      //   "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+    },
   },
   {
     timestamps: true,

@@ -1,4 +1,12 @@
-import { Box, Button, Stack, Text, useToast } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Stack,
+  Text,
+  Tooltip,
+  useToast,
+} from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ChatState } from "../context/ChatProvider";
@@ -86,6 +94,7 @@ const MyChats = ({ fetchAgain }) => {
             {chats.map((chat) => {
               return (
                 <Box
+                  display={"flex"}
                   onClick={() => setSelectedChat(chat)}
                   cursor={"pointer"}
                   px={3}
@@ -95,24 +104,50 @@ const MyChats = ({ fetchAgain }) => {
                   color={selectedChat === chat ? "white" : "black"}
                   key={chat._id}
                 >
-                  <Text>
-                    {!chat.isGroupChat
-                      ? getSender(loggedUser, chat.users)
-                      : chat.chatName}
-                  </Text>
-                  {chat.latestMessage && (
-                    <Text fontSize="xs">
-                      <b>
-                        {chat.latestMessage.sender.name === user.userExist.name
-                          ? "You"
-                          : chat.latestMessage.sender.name}{" "}
-                        :{" "}
-                      </b>
-                      {chat.latestMessage.content.length > 50
-                        ? chat.latestMessage.content.substring(0, 51) + "..."
-                        : chat.latestMessage.content}
+                  <div>
+                    {chat.users.map((ele) => {
+                      if (ele._id !== loggedUser._id) {
+                        return (
+                          <Tooltip
+                            label={ele.name}
+                            placement="bottom-start"
+                            hasArrow
+                            key={ele._id}
+                          >
+                            <Avatar
+                              mt={"7px"}
+                              mr={1}
+                              size={"sm"}
+                              cursor={"pointer"}
+                              name={ele.name}
+                              src={ele.pic}
+                            />
+                          </Tooltip>
+                        );
+                      }
+                    })}
+                  </div>
+                  <div>
+                    <Text>
+                      {!chat.isGroupChat
+                        ? getSender(loggedUser, chat.users)
+                        : chat.chatName}
                     </Text>
-                  )}
+                    {chat.latestMessage && (
+                      <Text fontSize="xs">
+                        <b>
+                          {chat.latestMessage.sender.name ===
+                          user.userExist.name
+                            ? "You"
+                            : chat.latestMessage.sender.name}
+                          {": "}
+                        </b>
+                        {chat.latestMessage.content.length > 50
+                          ? chat.latestMessage.content.substring(0, 51) + "..."
+                          : chat.latestMessage.content}
+                      </Text>
+                    )}
+                  </div>
                 </Box>
               );
             })}
