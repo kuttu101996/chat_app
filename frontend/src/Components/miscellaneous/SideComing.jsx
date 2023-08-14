@@ -135,7 +135,7 @@ const SideComing = () => {
           </Button>
         </Tooltip>
         <Text fontSize={"2xl"} fontWeight={"bold"}>
-          Let's Chat
+          Comm-U-Cate
         </Text>
         <div>
           <Menu>
