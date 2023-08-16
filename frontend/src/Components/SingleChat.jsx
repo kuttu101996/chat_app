@@ -117,13 +117,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stopTyping", () => setIsTyping(false));
-  }, []);
+  }, [user.userExist]);
 
   useEffect(() => {
     socket.on("messageRcv", (newMessageRcv) => {
       if (
         !selectedChatCompare ||
-        selectedChatCompare._id != newMessageRcv.chat._id
+        selectedChatCompare._id !== newMessageRcv.chat._id
       ) {
         // Notification
         if (!notification.includes(newMessageRcv)) {

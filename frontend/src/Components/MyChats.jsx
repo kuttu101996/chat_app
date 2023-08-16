@@ -91,7 +91,7 @@ const MyChats = ({ fetchAgain }) => {
       >
         {chats.length > 0 ? (
           <Stack overflowY={"scroll"}>
-            {chats.map((chat) => {
+            {chats?.map((chat) => {
               return (
                 <Box
                   display={"flex"}
@@ -105,7 +105,7 @@ const MyChats = ({ fetchAgain }) => {
                   key={chat._id}
                 >
                   <div>
-                    {chat.users.map((ele) => {
+                    {chat.users?.map((ele) => {
                       if (ele._id !== loggedUser._id) {
                         return (
                           <Tooltip

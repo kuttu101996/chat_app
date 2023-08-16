@@ -21,7 +21,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
-  const { user, setUser } = ChatState();
+  const { setUser } = ChatState();
 
   const handleSubmit = async () => {
     setLoading(true);
