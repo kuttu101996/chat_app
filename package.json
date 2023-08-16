@@ -8,6 +8,9 @@
     "server": "nodemon server.js",
     "build": "npm install --legacy-peer-deps && npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "keywords": [],
   "author": "Snehasish Ghosh Dastidar",
   "license": "ISC",
