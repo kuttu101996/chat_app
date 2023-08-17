@@ -9,11 +9,11 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { ChatState } from "../context/ChatProvider";
+import { ChatState } from "../../context/ChatProvider";
 import { AddIcon } from "@chakra-ui/icons";
 import ChatLoading from "./ChatLoading";
-import { getSender } from "../config/ChatLogics";
-import GroupChatModal from "./miscellaneous/GroupChatModal";
+import { getSender } from "../../config/ChatLogics";
+import GroupChatModal from "../miscellaneous/GroupChatModal";
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState({});
@@ -27,7 +27,10 @@ const MyChats = ({ fetchAgain }) => {
           Authorization: `bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get("/api/chat", config);
+      const { data } = await axios.get(
+        "http://localhost:4444/api/chat",
+        config
+      );
       setChats(data);
     } catch (error) {
       toast({

@@ -25,7 +25,7 @@ import { ChatState } from "../../context/ChatProvider";
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import ChatLoading from "../ChatLoading";
+import ChatLoading from "../chatCompo/ChatLoading";
 import UserListItem from "../userAvatar/UserListItem";
 
 const SideComing = () => {
@@ -70,7 +70,10 @@ const SideComing = () => {
           Authorization: `bearer ${token}`,
         },
       };
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
+      const { data } = await axios.get(
+        `http://localhost:4444/api/user?search=${search}`,
+        config
+      );
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
@@ -95,7 +98,11 @@ const SideComing = () => {
           Authorization: `bearer ${user.token}`,
         },
       };
-      const { data } = await axios.post(`/api/chat`, { userId }, config);
+      const { data } = await axios.post(
+        `http://localhost:4444/api/chat`,
+        { userId },
+        config
+      );
 
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
 
@@ -139,23 +146,26 @@ const SideComing = () => {
         </Text>
         <div>
           <Menu>
-            <MenuButton p={"10px"}>
+            <MenuButton paddingRight={"10px"}>
               {notification.length > 0 && (
-                <h3
+                <h5
                   style={{
-                    width: "70%",
+                    fontSize: "13px",
+                    width: "50%",
                     background: "red",
                     color: "white",
                     borderRadius: "50%",
-                    marginBottom: -10,
-                    marginTop: -5,
-                    marginLeft: "10px",
+                    marginBottom: -12,
+                    marginTop: "-5px",
+                    marginLeft: "12px",
                   }}
                 >
                   {notification.length}
-                </h3>
+                </h5>
               )}
-              <BellIcon fontSize={"2xl"} m={1} />
+              {/*
+               */}
+              <BellIcon fontSize={"2xl"} m={1} marginBottom={0} marginTop={0} />
             </MenuButton>
             <MenuList p={2}>
               {!notification.length && "No new Messages"}
@@ -184,7 +194,12 @@ const SideComing = () => {
             </MenuList>
           </Menu>
           <Menu>
-            <MenuButton padding={2} as={Button} rightIcon={<ChevronDownIcon />}>
+            <MenuButton
+              marginTop={"3px"}
+              padding={2}
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+            >
               <Avatar
                 size={"sm"}
                 cursor={"pointer"}

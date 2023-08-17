@@ -19,7 +19,9 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
-  const [pic, setPic] = useState("");
+  const [pic, setPic] = useState(
+    "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+  );
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   // const history = useHistory();
@@ -43,7 +45,7 @@ const Signup = () => {
       data.append("upload_preset", "first_chat_app");
       data.append("cloud_name", "dlz45puq4");
 
-      fetch(`https://api.cloudinary.com/v1_1/dlz45puq4/image/upload`, {
+      fetch(`https://api.cloudinary.com/v1_1/dlz45puq4/image/upload`, {public_id: `${data}`}, {
         method: "POST",
         body: data,
       })
@@ -102,7 +104,7 @@ const Signup = () => {
         },
       };
       const { data } = await axios.post(
-        `/api/user/register`,
+        `http://localhost:4444/api/user/register`,
         { name, email, password, pic },
         head
       );

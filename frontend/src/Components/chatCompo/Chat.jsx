@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { ChatState } from "../context/ChatProvider";
+import { ChatState } from "../../context/ChatProvider";
 import { Box } from "@chakra-ui/react";
-import SideComing from "./miscellaneous/SideComing";
+import SideComing from "../miscellaneous/SideComing";
 import MyChats from "./MyChats";
 import ChatBox from "./ChatBox";
 
 const Chat = () => {
-  const [fetchAgain, setFetchAgain] = useState(false)
+  const [fetchAgain, setFetchAgain] = useState(false);
   const { user } = ChatState();
 
   return (
@@ -20,7 +20,9 @@ const Chat = () => {
         p={"10px"}
       >
         {user && <MyChats fetchAgain={fetchAgain} />}
-        {user && <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />}
+        {user && (
+          <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
+        )}
       </Box>
     </div>
   );

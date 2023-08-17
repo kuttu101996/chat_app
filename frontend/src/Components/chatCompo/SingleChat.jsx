@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import "./style.css";
-import { ChatState } from "../context/ChatProvider";
+import "../style.css";
+import { ChatState } from "../../context/ChatProvider";
 import {
   Box,
   FormControl,
@@ -11,14 +11,14 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { getSender, getSenderFull } from "../config/ChatLogics";
-import ProfileModal from "./miscellaneous/ProfileModal";
-import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
+import { getSender, getSenderFull } from "../../config/ChatLogics";
+import ProfileModal from "../miscellaneous/ProfileModal";
+import UpdateGroupChatModal from "../miscellaneous/UpdateGroupChatModal";
 import axios from "axios";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 import Lottie from "lottie-react";
-import typingAnni from "../animation/typing.json";
+import typingAnni from "../../animation/typing.json";
 
 const ENDPOINT = "http://localhost:4444";
 var socket, selectedChatCompare;
@@ -45,7 +45,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
         };
         const { data } = await axios.post(
-          "/api/message",
+          "http://localhost:4444/api/message",
           {
             content: newMessage,
             chatId: selectedChat._id,
@@ -53,6 +53,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           config
         );
         setNewMessage("");
+        setFetchAgain(!fetchAgain);
         // fetchMessages();
         socket.emit("newMessage", data);
         setMessages([...messages, data]);
@@ -79,7 +80,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         },
       };
       const { data } = await axios.get(
-        `/api/message/${selectedChat._id}`,
+        `http://localhost:4444/api/message/${selectedChat._id}`,
         config
       );
       setMessages(data);
@@ -107,7 +108,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         })
       );
     }
-    // console.log(notification);
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 

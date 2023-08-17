@@ -4,11 +4,11 @@ const cors = require("cors");
 const colors = require("colors");
 const path = require("path");
 
-const { connection } = require("./backend/config/db");
-const { userRouter } = require("./backend/Routes/user.router");
-const { notFound, errorHandler } = require("./backend/middleware/errorHandler");
-const { chatRouter } = require("./backend/Routes/chat.router");
-const { messageRouter } = require("./backend/Routes/message.router");
+const { connection } = require("./config/db");
+const { userRouter } = require("./Routes/user.router");
+const { notFound, errorHandler } = require("./middleware/errorHandler");
+const { chatRouter } = require("./Routes/chat.router");
+const { messageRouter } = require("./Routes/message.router");
 
 const app = express();
 app.use(cors());
@@ -18,18 +18,22 @@ app.use("/api/user", userRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/message", messageRouter);
 
-const __dirname1 = path.resolve();
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname1, "/frontend/build")));
+app.get("/", (req, res) => {
+  return res.send("Hello From Server");
+});
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname1, "frontend", "build", "index.html"));
-  });
-} else {
-  app.get("/", (req, res) => {
-    res.send({ msg: "Hello from the Server" });
-  });
-}
+// const __dirname1 = path.resolve();
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname1, "/frontend/build")));
+
+//   app.get("*", (req, res) => {
+//     res.sendFile(path.resolve(__dirname1, "frontend", "build", "index.html"));
+//   });
+// } else {
+//   app.get("/", (req, res) => {
+//     res.send({ msg: "Hello from the Server" });
+//   });
+// }
 
 app.use(notFound);
 app.use(errorHandler);
@@ -50,6 +54,19 @@ const io = require("socket.io")(server, {
     origin: "http://localhost:3000",
   },
 });
+
+// "https://comm-n-cate.netlify.app/"
+// const io = require("socket.io")(server, {
+//   handlePreflightRequest: (req, res) => {
+//     const headers = {
+//       "Access-Control-Allow-Headers": "Content-Type, Authorization",
+//       "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
+//       "Access-Control-Allow-Credentials": true,
+//     };
+//     res.writeHead(200, headers);
+//     res.end();
+//   },
+// });
 
 io.on("connection", (socket) => {
   socket.on("setup", (userData) => {
