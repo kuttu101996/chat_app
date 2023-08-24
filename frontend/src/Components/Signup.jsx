@@ -10,9 +10,10 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import axios from "axios";
-// import { useHistory } from "react-router-dom";
+import emailValidator from "email-validator";
 
 const Signup = () => {
+  const [isValid, setIsValid] = useState(false);
   const [show, setShow] = useState(false);
   const [showCnf, setShowCnf] = useState(false);
   const [name, setName] = useState("");
@@ -24,7 +25,6 @@ const Signup = () => {
   );
   const [loading, setLoading] = useState(false);
   const toast = useToast();
-  // const history = useHistory();
 
   const postDetails = (pics) => {
     setLoading(true);
@@ -45,10 +45,14 @@ const Signup = () => {
       data.append("upload_preset", "first_chat_app");
       data.append("cloud_name", "dlz45puq4");
 
-      fetch(`https://api.cloudinary.com/v1_1/dlz45puq4/image/upload`, {public_id: `${data}`}, {
-        method: "POST",
-        body: data,
-      })
+      fetch(
+        `https://api.cloudinary.com/v1_1/dlz45puq4/image/upload`,
+        { public_id: `${data}` },
+        {
+          method: "POST",
+          body: data,
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           setPic(data.url.toString(""));
@@ -73,6 +77,17 @@ const Signup = () => {
 
   const handleSubmit = async () => {
     setLoading(true);
+    if (isValid === false) {
+      toast({
+        title: "Please enter a valid Email address",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
     if (!name || !email || !password || !confirmpassword) {
       toast({
         title: "Please Fill all the Fields",
@@ -103,6 +118,7 @@ const Signup = () => {
           "Content-type": "application/json",
         },
       };
+      // comm-u-cate.onrender.com
       const { data } = await axios.post(
         `http://localhost:4444/api/user/register`,
         { name, email, password, pic },
@@ -117,8 +133,8 @@ const Signup = () => {
         position: "top",
       });
 
-      localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
+      setIsValid(false);
       return;
     } catch (error) {
       toast({
@@ -150,6 +166,8 @@ const Signup = () => {
         <Input
           placeholder="Enter Your Email"
           onChange={(e) => {
+            const email = e.target.value;
+            setIsValid(emailValidator.validate(email));
             setEmail(e.target.value);
           }}
         />
