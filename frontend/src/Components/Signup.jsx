@@ -26,7 +26,7 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
-  const postDetails = (pics) => {
+  const postDetails = async (pics) => {
     setLoading(true);
     if (pics === undefined) {
       toast({
@@ -45,9 +45,9 @@ const Signup = () => {
       data.append("upload_preset", "first_chat_app");
       data.append("cloud_name", "dlz45puq4");
 
-      fetch(
+      await fetch(
         `https://api.cloudinary.com/v1_1/dlz45puq4/image/upload`,
-        { public_id: `${data}` },
+        // { public_id: `${data}` },
         {
           method: "POST",
           body: data,
@@ -55,6 +55,7 @@ const Signup = () => {
       )
         .then((res) => res.json())
         .then((data) => {
+          console.log(data);
           setPic(data.url.toString(""));
           setLoading(false);
         })
@@ -120,18 +121,21 @@ const Signup = () => {
       };
       // comm-u-cate.onrender.com
       const { data } = await axios.post(
-        `http://localhost:4444/api/user/register`,
+        `https://cc-qzzn.onrender.com/api/user/register`,
         { name, email, password, pic },
         head
       );
 
-      toast({
-        title: "Registration Successful",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-        position: "top",
-      });
+      if (data) {
+        toast({
+          title: "Registration Successful",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+        
+      }
 
       setLoading(false);
       setIsValid(false);
@@ -156,14 +160,21 @@ const Signup = () => {
         <FormLabel>Name</FormLabel>
         <Input
           placeholder="Enter Your Name"
+          value={name}
           onChange={(e) => {
-            setName(e.target.value);
+            const text = e.target.value;
+            if (text.length <= 35) {
+              setName(text);
+            }
+            // setName(e.target.value);
           }}
+          maxLength={35}
         />
       </FormControl>
       <FormControl>
         <FormLabel>Email</FormLabel>
         <Input
+          type="email"
           placeholder="Enter Your Email"
           onChange={(e) => {
             const email = e.target.value;
@@ -181,6 +192,7 @@ const Signup = () => {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
+            minLength={4}
           />
           <InputRightElement width="4rem">
             <Button
@@ -204,6 +216,7 @@ const Signup = () => {
             onChange={(e) => {
               setConfirmpassword(e.target.value);
             }}
+            minLength={4}
           />
           <InputRightElement width={"4rem"}>
             <Button
